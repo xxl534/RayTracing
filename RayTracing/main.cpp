@@ -32,25 +32,64 @@ Vector3 Color(const Ray& ray, Hitable* world, int depth)
 	return Vector3(1.f) * (1.f - t) + Vector3(0.5f, 0.7f, 1.f) * t;
 }
 
+Hitable*  RandomScene()
+{
+	
+	Hitable** list = new Hitable*[500];
+	list[0] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f)));
+	int i = 1;
+	for (int a = -11; a < 11; ++a)
+	{
+		for (int b = -11; b < 11; ++b)
+		{
+			Vector3 center(a + 0.8f * random.Gen(), 0.2f, b + 0.8f * random.Gen());
+			float matRandon = random.Gen();
+			Material* pMat;
+			if (matRandon < 0.7f)
+			{
+				pMat = new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen()));
+			}
+			else if (matRandon < 0.9f)
+			{
+				pMat = new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen())));
+			}
+			else
+			{
+				pMat = new Dielectric(1.f + random.Gen() * 0.5f, Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen())));
+			}
+			list[i++] = new Sphere(center, 0.2f, pMat);
+		}
+	}
+	list[i++] = new Sphere(Vector3(0.f, 1.f, 0.f), 1.f, new Dielectric(1.5f, Vector3(1.f)));
+	list[i++] = new Sphere(Vector3(-4.f, 1.f, 0.f), 1.f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
+	list[i++] = new Sphere(Vector3(4.f, 1.f, 0.f), 1.f, new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()))));
+	return new HitableList(list, i);
+}
 int main()
 {
-	int nx = 200;
-	int ny = 100;
+	int nx = 500;
+	int ny = 250;
 	int ns = 10;
 	float fs = 1.f / ns;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
-	Camera cam(Vector3(-1.f, 1.f, -0.5f), Vector3(-0.f, 0.f, 1.f), Vector3(0.f, 1.f, 0.f), 90, float(nx) / float(ny));
-	Hitable* list[5];
+	Vector3 vEye(-5.f, 3.f, -4.5f);
+	Vector3 vLookAt(0.f, 0.f, 0.f);
+	float fDistToFocus = (vLookAt - vEye).Length();
+	float fAperture = 0.5f;
+	//fAperture = 0.f;
+	Camera cam(vEye, vLookAt, Vector3(0.f, 1.f, 0.f), 90, float(nx) / float(ny), fAperture, fDistToFocus);
+	/*Hitable* list[5];
 	list[0] = new Sphere(Vector3(0.f, 0.f, 1.f), 0.5f, new Lambertian(Vector3(0.8f, 0.3f, 0.3f)));
 	list[1] = new Sphere(Vector3(0.f, -100.5f, 1.f), 100.f, new Lambertian(Vector3(0.8f, 0.8f, 0.f)));
 	list[2] = new Sphere(Vector3(1.f, 0.f, 1.f), 0.5f, new Metal(Vector3(0.8f, 0.6f, 0.2f)));
 	list[3] = new Sphere(Vector3(-1.f, 0.f, 1.f), 0.5f, new Dielectric( 1.51f, Vector3(1.f, 1.f, 1.f)));
 	list[4] = new Sphere(Vector3(-1.f, 0.f, 1.f), -0.49f, new Dielectric(1.51f, Vector3(1.f, 1.f, 1.f)));
-	Hitable* world = new HitableList(list,4);
+	Hitable* world = new HitableList(list,4);*/
 	/*Hitable* list[2];
 	list[0] = new Sphere(Vector3(0.f, 0.f, 1.f), 0.5f, new Metal(Vector3(1.0f, 1.0f, 1.0f)));
 	list[1] = new Sphere(Vector3(1.f, 0.f, 1.f), 0.5f, new Lambertian(Vector3(0.8f, 0.8f, 0.f)));
 	Hitable* world = new HitableList(list, 2);*/
+	Hitable* world = RandomScene();
 	for(int j = ny - 1; j >= 0; --j )
 	{
 		for (int i = 0; i < nx; ++i)

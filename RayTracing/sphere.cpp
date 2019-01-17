@@ -27,3 +27,9 @@ bool Sphere::Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec)
 	return false;
 	
 }
+
+void Sphere::Tick(float elapsed)
+{
+	Vector3 vVelocity = m_vVelocity + m_vAcceleration * elapsed;
+	m_vCenter += (vVelocity + m_vVelocity) * (0.5f * elapsed);
+}

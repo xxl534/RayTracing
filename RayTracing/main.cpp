@@ -38,11 +38,19 @@ Hitable*  RandomScene()
 	Hitable** list = new Hitable*[500];
 	list[0] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f)));
 	int i = 1;
-	for (int a = -11; a < 11; ++a)
+	for (int a = -2; a <= 2; ++a)
 	{
-		for (int b = -11; b < 11; ++b)
+		for (int b = -2; b <= 2; ++b)
 		{
-			Vector3 center(a + 0.8f * random.Gen(), 0.2f, b + 0.8f * random.Gen());
+			float moveRandom = random.Gen();
+			Vector3 vVelocity(0.f);
+			Vector3 vAccele(0.f);
+			if (moveRandom < 0.5 )
+			{
+				vVelocity.y = (random.Gen() * 2.f - 1.f) * 3.f;
+				vAccele.y = -9.8f;
+			}
+			Vector3 center(a * 2.f + 0.8f * random.Gen(), 0.2f + 3.f * random.Gen(), b * 2.f + 0.8f * random.Gen());
 			float matRandon = random.Gen();
 			Material* pMat;
 			if (matRandon < 0.7f)
@@ -57,25 +65,30 @@ Hitable*  RandomScene()
 			{
 				pMat = new Dielectric(1.f + random.Gen() * 0.5f, Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen())));
 			}
-			list[i++] = new Sphere(center, 0.2f, pMat);
+			list[i++] = new Sphere(center, vVelocity, vAccele, 0.2f, pMat);
 		}
 	}
 	list[i++] = new Sphere(Vector3(0.f, 1.f, 0.f), 1.f, new Dielectric(1.5f, Vector3(1.f)));
-	list[i++] = new Sphere(Vector3(-4.f, 1.f, 0.f), 1.f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
-	list[i++] = new Sphere(Vector3(4.f, 1.f, 0.f), 1.f, new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()))));
+	list[i++] = new Sphere(Vector3(-2.f, 1.f, 0.f), 1.f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
+	list[i++] = new Sphere(Vector3(2.f, 1.f, 0.f), 1.f, new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()))));
 	return new HitableList(list, i);
 }
 int main()
 {
-	int nx = 500;
-	int ny = 250;
+	int nx = 400;
+	int ny = 200;
+	Vector3* colBuffer = new Vector3[nx*ny];
+	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
+	float fShutterDuration = 0.1f;
+	float fSampleInterval = 0.01f;
+	int nSampleCount = (int)(fShutterDuration / fSampleInterval);
 	int ns = 10;
 	float fs = 1.f / ns;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
-	Vector3 vEye(-5.f, 3.f, -4.5f);
-	Vector3 vLookAt(0.f, 0.f, 0.f);
+	Vector3 vEye( 2.f, 3.f, -3.5f);
+	Vector3 vLookAt(0.f, 0.f, 0.0f);
 	float fDistToFocus = (vLookAt - vEye).Length();
-	float fAperture = 0.5f;
+	float fAperture = 0.1f;
 	//fAperture = 0.f;
 	Camera cam(vEye, vLookAt, Vector3(0.f, 1.f, 0.f), 90, float(nx) / float(ny), fAperture, fDistToFocus);
 	/*Hitable* list[5];
@@ -85,35 +98,41 @@ int main()
 	list[3] = new Sphere(Vector3(-1.f, 0.f, 1.f), 0.5f, new Dielectric( 1.51f, Vector3(1.f, 1.f, 1.f)));
 	list[4] = new Sphere(Vector3(-1.f, 0.f, 1.f), -0.49f, new Dielectric(1.51f, Vector3(1.f, 1.f, 1.f)));
 	Hitable* world = new HitableList(list,4);*/
-	/*Hitable* list[2];
-	list[0] = new Sphere(Vector3(0.f, 0.f, 1.f), 0.5f, new Metal(Vector3(1.0f, 1.0f, 1.0f)));
-	list[1] = new Sphere(Vector3(1.f, 0.f, 1.f), 0.5f, new Lambertian(Vector3(0.8f, 0.8f, 0.f)));
-	Hitable* world = new HitableList(list, 2);*/
+	/*Hitable* list[3];
+	list[0] = new Sphere(Vector3(0.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
+	list[1] = new Sphere(Vector3(1.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
+	list[2] = new Sphere(Vector3(-1.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
+	Hitable* world = new HitableList(list, 3);*/
 	Hitable* world = RandomScene();
-	for(int j = ny - 1; j >= 0; --j )
+	for (int s = 0; s < nSampleCount; ++s)
+	{
+		world->Tick(fSampleInterval);
+		for (int j = ny - 1; j >= 0; --j)
+		{
+			for (int i = 0; i < nx; ++i)
+			{
+				Vector3 vCol(0.f);
+				for (int h = 0; h < ns; ++h)
+				{
+					for (int w = 0; w < ns; ++w)
+					{
+						float u = (float(i) + w * fs) / float(nx);
+						float v = (float(j) + h * fs) / float(ny);
+						Ray ray = cam.GetRay(u, v);
+						vCol += Color(ray, world, 0);
+					}
+				}
+				vCol /= float(ns*ns);
+				colBuffer[j * nx + i] += vCol;
+			}
+		}
+	}
+	for (int j = ny - 1; j >= 0; --j)
 	{
 		for (int i = 0; i < nx; ++i)
 		{
-			Vector3 vCol(0.f);
-			for (int h = 0; h < ns; ++h)
-			{
-				for (int w = 0; w < ns; ++w)
-				{
-					float u = (float(i) + w * fs) / float(nx);
-					float v = (float(j) + h * fs) / float(ny);
-					Ray ray = cam.GetRay(u, v);
-					vCol += Color(ray, world, 0);
-				}
-			}
-			vCol /= float(ns*ns);
-			/*for (int s = 0; s < ns; ++s)
-			{
-				float u = (float(i) + random.Gen()) / float(nx);
-				float v = (float(j) + random.Gen()) / float(ny);
-				Ray ray = cam.GetRay(u, v);
-				vCol += Color(ray, world, 0);
-			}
-			vCol /= float(ns);*/
+			Vector3& vCol = colBuffer[j * nx + i];
+			vCol /= float(nSampleCount);
 			vCol = Vector3(sqrtf(vCol.x), sqrtf(vCol.y), sqrtf(vCol.z));
 			int ir = int(255.99* vCol.x);
 			int ig = int(255.99* vCol.y);

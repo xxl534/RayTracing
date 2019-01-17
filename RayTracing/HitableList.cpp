@@ -17,3 +17,11 @@ bool HitableList::Hit(const Ray & ray, float fMinCoef, float fMaxCoef, HitRecord
 	return hit;
 }
 
+void HitableList::Tick(float elapsed)
+{
+	for (int i = 0; i < m_nSize; ++i)
+	{
+		m_arrHitable[i]->Tick(elapsed);
+	}
+}
+

@@ -28,8 +28,7 @@ bool Sphere::Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec)
 	
 }
 
-void Sphere::Tick(float elapsed)
+void Sphere::UpdateStateAtTime(float elapsed)
 {
-	Vector3 vVelocity = m_vVelocity + m_vAcceleration * elapsed;
-	m_vCenter += (vVelocity + m_vVelocity) * (0.5f * elapsed);
+	m_vCenter = m_vOrigin + m_vVelocity * elapsed + m_vAcceleration * (0.5f * elapsed * elapsed);
 }

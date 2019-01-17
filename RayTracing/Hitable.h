@@ -14,6 +14,6 @@ class Hitable
 {
 public:
 	virtual bool Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec) const = 0;
-	virtual void Tick(float elapsed) = 0;
+	virtual void UpdateStateAtTime(float elapsed) = 0;
 };
 

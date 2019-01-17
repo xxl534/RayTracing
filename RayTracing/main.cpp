@@ -80,10 +80,7 @@ int main()
 	Vector3* colBuffer = new Vector3[nx*ny];
 	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
 	float fShutterDuration = 0.1f;
-	float fSampleInterval = 0.01f;
-	int nSampleCount = (int)(fShutterDuration / fSampleInterval);
-	int ns = 10;
-	float fs = 1.f / ns;
+	int ns = 100;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 	Vector3 vEye( 2.f, 3.f, -3.5f);
 	Vector3 vLookAt(0.f, 0.f, 0.0f);
@@ -104,35 +101,20 @@ int main()
 	list[2] = new Sphere(Vector3(-1.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
 	Hitable* world = new HitableList(list, 3);*/
 	Hitable* world = RandomScene();
-	for (int s = 0; s < nSampleCount; ++s)
-	{
-		world->Tick(fSampleInterval);
-		for (int j = ny - 1; j >= 0; --j)
-		{
-			for (int i = 0; i < nx; ++i)
-			{
-				Vector3 vCol(0.f);
-				for (int h = 0; h < ns; ++h)
-				{
-					for (int w = 0; w < ns; ++w)
-					{
-						float u = (float(i) + w * fs) / float(nx);
-						float v = (float(j) + h * fs) / float(ny);
-						Ray ray = cam.GetRay(u, v);
-						vCol += Color(ray, world, 0);
-					}
-				}
-				vCol /= float(ns*ns);
-				colBuffer[j * nx + i] += vCol;
-			}
-		}
-	}
 	for (int j = ny - 1; j >= 0; --j)
 	{
 		for (int i = 0; i < nx; ++i)
 		{
-			Vector3& vCol = colBuffer[j * nx + i];
-			vCol /= float(nSampleCount);
+			Vector3 vCol(0.f);
+			for (int s = 0; s < ns; ++s)
+			{
+				float u = (float(i) + random.Gen()) / float(nx);
+				float v = (float(j) + random.Gen()) / float(ny);
+				Ray ray = cam.GetRay(u, v);
+				world->UpdateStateAtTime(fShutterDuration * random.Gen());
+				vCol += Color(ray, world, 0);
+			}
+			vCol /= float(ns);
 			vCol = Vector3(sqrtf(vCol.x), sqrtf(vCol.y), sqrtf(vCol.z));
 			int ir = int(255.99* vCol.x);
 			int ig = int(255.99* vCol.y);

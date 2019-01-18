@@ -10,6 +10,7 @@
 #include "Lambertian.h"
 #include "Metal.h"
 #include "Dielectric.h"
+#include "Texture.h"
 
 extern RandomFloat random = RandomFloat();
 Vector3 Color(const Ray& ray, Hitable* world, int depth)
@@ -37,7 +38,10 @@ Hitable*  RandomScene()
 {
 	
 	Hitable** list = new Hitable*[500];
-	list[0] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f)));
+	ConstantTexture* pOddTex = new ConstantTexture(Vector3(random.Gen() * 0.5f, random.Gen()* 0.5f, random.Gen()* 0.5f));
+	ConstantTexture* pEvenTex = new ConstantTexture(Vector3(random.Gen()* 0.5f + 0.5f, random.Gen()* 0.5f + 0.5f, random.Gen()* 0.5f + 0.5f));
+	CheckerTexture* pTex = new CheckerTexture(pOddTex, pEvenTex);
+	list[0] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f), pTex));
 	int i = 1;
 	for (int a = -2; a <= 2; ++a)
 	{
@@ -82,17 +86,17 @@ int main()
 {
 	LONG64 llCurrTick;
 	QueryPerformanceCounter((LARGE_INTEGER*)&llCurrTick);
-	int nx = 400;
+	int nx = 500;
 	int ny = 200;
 	Vector3* colBuffer = new Vector3[nx*ny];
 	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
-	int ns = 100;
+	int ns = 400;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
-	Vector3 vEye( 2.f, 3.f, -3.5f);
-	Vector3 vLookAt(0.f, 0.f, 0.0f);
+	Vector3 vEye( 3.0f, 2.5f, -3.0f);
+	Vector3 vLookAt(0.f, 1.f, 0.0f);
 	float fDistToFocus = (vLookAt - vEye).Length();
 	float fAperture = 0.1f;
-	//fAperture = 0.f;
+	fAperture = 0.f;
 	Camera cam(vEye, vLookAt, Vector3(0.f, 1.f, 0.f), 90, float(nx) / float(ny), fAperture, fDistToFocus);
 	/*Hitable* list[5];
 	list[0] = new Sphere(Vector3(0.f, 0.f, 1.f), 0.5f, new Lambertian(Vector3(0.8f, 0.3f, 0.3f)));

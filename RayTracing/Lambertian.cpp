@@ -1,8 +1,15 @@
 #include "Lambertian.h"
 #include "Random.h"
+#include "Texture.h"
 extern RandomFloat random;
+Lambertian::Lambertian(const Vector3 & albedo, Texture * pTexture)
+	:m_vAlbedo(albedo)
+	,m_pTexture(pTexture)
+{
+}
 Lambertian::Lambertian(const Vector3& albedo)
 	:m_vAlbedo(albedo)
+	,m_pTexture(NULL)
 {
 }
 
@@ -15,6 +22,6 @@ Lambertian::scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenua
 {
 	Vector3 vRefl = record.point + record.normal + random.InSphere();
 	rayScattered = Ray(record.point, vRefl - record.point);
-	vAttenuation = m_vAlbedo;
+	vAttenuation = m_pTexture ? m_vAlbedo * m_pTexture->Sample(0, 0, record.point) : m_vAlbedo;
 	return true;
 }

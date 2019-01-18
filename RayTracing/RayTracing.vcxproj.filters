@@ -89,6 +89,9 @@
     <ClInclude Include="BVH.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="vector.inl">

@@ -1,6 +1,6 @@
 #pragma once
 #include "ray.h"
-
+#include "Aabb.h"
 class Material;
 struct HitRecord
 {
@@ -14,6 +14,6 @@ class Hitable
 {
 public:
 	virtual bool Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec) const = 0;
-	virtual void UpdateStateAtTime(float elapsed) = 0;
+	virtual Aabb GetAabb() = 0;
 };
 

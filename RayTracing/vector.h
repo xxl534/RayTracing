@@ -1,4 +1,5 @@
 #pragma once
+#include "Math.h"
 struct Vector3
 {
 	union
@@ -12,6 +13,10 @@ struct Vector3
 
 	bool			operator==(const Vector3& a_rhs) const;
 	bool			operator!=(const Vector3& a_rhs) const;
+	bool			operator>(const Vector3& a_rhs) const;
+	bool			operator>=(const Vector3& a_rhs) const;
+	bool			operator<(const Vector3& a_rhs) const;
+	bool			operator<=(const Vector3& a_rhs) const;
 	Vector3&	operator-=(const Vector3& a_rhs);
 	Vector3		operator-(const Vector3& a_rhs) const;
 	Vector3		operator-() const;
@@ -65,6 +70,8 @@ struct Vector3
 	inline static const Vector3&	Zero();
 	inline static Vector3		Reflect(const Vector3& v, const Vector3& vNormal);
 	inline static bool			Refract(const Vector3& v, const Vector3& vNormal, float fRefractiveRadio, Vector3& out_vRefracted);
+	inline static Vector3		MergeMin(const Vector3& lhs, const Vector3& rhs);
+	inline static Vector3		MergeMax(const Vector3& lhs, const Vector3& rhs);
 private:
 	static Vector3			ms_vZero;
 };

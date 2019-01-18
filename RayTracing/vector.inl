@@ -15,6 +15,30 @@ Vector3::operator!=(const Vector3& a_rhs) const
 	return x != a_rhs.x || y != a_rhs.y || z != a_rhs.z;
 }
 
+inline bool 
+Vector3::operator>(const Vector3& a_rhs) const
+{
+	return x > a_rhs.x && y > a_rhs.y && z > a_rhs.z;
+}
+
+inline bool
+Vector3::operator>=(const Vector3& a_rhs) const
+{
+	return x >= a_rhs.x && y >= a_rhs.y && z >= a_rhs.z;
+}
+
+inline bool
+Vector3::operator<(const Vector3& a_rhs) const
+{
+	return x < a_rhs.x && y < a_rhs.y && z < a_rhs.z;
+}
+
+inline bool
+Vector3::operator<=(const Vector3& a_rhs) const
+{
+	return x <= a_rhs.x && y <= a_rhs.y && z <= a_rhs.z;
+}
+
 //-------------------------------------------------------------------------
 
 inline Vector3&
@@ -275,4 +299,16 @@ Vector3::Refract(const Vector3& vIn, const Vector3& vNormal, float fRefractiveRa
 		return true;
 	}
 	return false;
+}
+
+inline Vector3 
+Vector3::MergeMin(const Vector3& lhs, const Vector3& rhs)
+{
+	return Vector3(Min(lhs.x, rhs.x), Min(lhs.y, rhs.y), Min(lhs.z, rhs.z));
+}
+
+inline Vector3 
+Vector3::MergeMax(const Vector3& lhs, const Vector3& rhs)
+{
+	return Vector3(Max(lhs.x, rhs.x), Max(lhs.y, rhs.y), Max(lhs.z, rhs.z));
 }

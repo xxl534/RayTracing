@@ -1,4 +1,5 @@
 #include <iostream>
+#include <windows.h>
 #include "ray.h"
 #include "sphere.h"
 #include <float.h>
@@ -73,13 +74,18 @@ Hitable*  RandomScene()
 	list[i++] = new Sphere(Vector3(2.f, 1.f, 0.f), 1.f, new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()))));
 	return new HitableList(list, i);
 }
+
+extern float gShutterDuration = 0.1f;
+extern float gElapsed = 0.f;
+
 int main()
 {
+	LONG64 llCurrTick;
+	QueryPerformanceCounter((LARGE_INTEGER*)&llCurrTick);
 	int nx = 400;
 	int ny = 200;
 	Vector3* colBuffer = new Vector3[nx*ny];
 	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
-	float fShutterDuration = 0.1f;
 	int ns = 100;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 	Vector3 vEye( 2.f, 3.f, -3.5f);
@@ -111,7 +117,7 @@ int main()
 				float u = (float(i) + random.Gen()) / float(nx);
 				float v = (float(j) + random.Gen()) / float(ny);
 				Ray ray = cam.GetRay(u, v);
-				world->UpdateStateAtTime(fShutterDuration * random.Gen());
+				gElapsed = gShutterDuration * random.Gen();
 				vCol += Color(ray, world, 0);
 			}
 			vCol /= float(ns);
@@ -123,4 +129,7 @@ int main()
 		}
 		std::cout << "\n";
 	}
+	LONG64 llEndTick;
+	QueryPerformanceCounter((LARGE_INTEGER*)&llEndTick);
+	//std::cout << llEndTick - llCurrTick;
 }

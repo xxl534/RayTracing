@@ -150,6 +150,7 @@
     <ClCompile Include="HitableList.cpp" />
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="BVH.cpp" />
     <ClCompile Include="SinTable.cpp" />
     <ClCompile Include="Metal.cpp" />
     <ClCompile Include="ray.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Aabb.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dielectric.h" />
     <ClInclude Include="Hitable.h" />
@@ -165,6 +167,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Metal.h" />
+    <ClInclude Include="BVH.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="sphere.h" />

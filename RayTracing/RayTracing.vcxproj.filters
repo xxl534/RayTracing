@@ -42,6 +42,9 @@
     <ClCompile Include="Dielectric.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BVH.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector.h">
@@ -78,6 +81,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Dielectric.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Aabb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BVH.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

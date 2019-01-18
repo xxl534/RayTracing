@@ -7,8 +7,8 @@ HitableList::HitableList(Hitable** arrHitable, int nSize) :m_arrHitable(arrHitab
 
 bool HitableList::Hit(const Ray & ray, float fMinCoef, float fMaxCoef, HitRecord & rec) const
 {
-	//return m_bvh->Hit(ray, fMinCoef, fMaxCoef, rec);
-	HitRecord hitRecord;
+	return m_bvh->Hit(ray, fMinCoef, fMaxCoef, rec);
+	/*HitRecord hitRecord;
 	bool hit = false;
 	float closest = fMaxCoef;
 	for (int i = 0; i < m_nSize; ++i )
@@ -20,7 +20,7 @@ bool HitableList::Hit(const Ray & ray, float fMinCoef, float fMaxCoef, HitRecord
 			rec = hitRecord;
 		}
 	}
-	return hit;
+	return hit;*/
 }
 
 Aabb HitableList::GetAabb()

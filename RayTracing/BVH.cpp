@@ -121,7 +121,7 @@ BvhBranchNode::BvhBranchNode(Hitable** arrLeaf, int count, const Aabb& aabb)
 	,m_pLeft(NULL)
 	,m_pRight(NULL)
 {
-	assert(count > 2);
+	assert(count >= 2);
 	Vector3 vDiag = m_aabb.Max() - m_aabb.Min();
 	float fBiaDiag = 0.f;
 	int offset = -1;

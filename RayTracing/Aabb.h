@@ -1,6 +1,6 @@
 #pragma once
 #include "vector.h"
-#include "Math.h"
+#include "RTMath.h"
 #include "Ray.h"
 
 struct Aabb

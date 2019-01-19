@@ -1,4 +1,4 @@
-#include "Math.h"
+#include "RTMath.h"
 
 const float GSinTable[] = {
 	0.000000f, 0.000383f, 0.000767f, 0.001150f, 0.001534f, 0.001917f, 0.002301f, 0.002684f, 0.003068f, 0.003451f,

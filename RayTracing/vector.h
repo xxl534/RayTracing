@@ -1,5 +1,5 @@
 #pragma once
-#include "Math.h"
+#include "RTMath.h"
 struct Vector3
 {
 	union

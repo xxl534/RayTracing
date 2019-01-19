@@ -1,0 +1,22 @@
+cmake_minimum_required (VERSION 2.6)
+project(RayTracing) 
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+SET(COMMON_INCLUDE_DIR ./;)
+
+ADD_DEFINITIONS(-DUNICODE -D_UNICODE)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+	
+#SET(LINK_LIB_DEBUG "d3d11.lib" "D3DCompiler.lib" "Effects11d.lib" "dxgi.lib" "dxguid.lib" "DirectXTK.lib")
+#SET(LINK_LIB_RELEASE "d3d11.lib" "D3DCompiler.lib" "Effects11.lib" "dxgi.lib" "dxguid.lib" "DirectXTK.lib")
+
+#SET(MEDIA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Media")
+INCLUDE(CMakeMacro.txt)
+INCLUDE(CMake_PreCompiled.txt)
+
+ADD_SUBDIRECTORY(RayTracing)
+
+ADD_SUBDIRECTORY(Scene/Balls)
+ADD_SUBDIRECTORY(Scene/CornellBox)

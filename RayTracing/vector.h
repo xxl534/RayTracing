@@ -66,6 +66,12 @@ struct Vector3
 	inline float			LengthSqr() const;
 	inline void				FindBestAxisVectors(Vector3& a_vAxis1, Vector3& a_vAxis2);
 	inline Vector3&		Set(float a_fx, float a_fy, float a_fz);
+	// Rotates the vector by a specified number of a_fDegrees around the X axis and the specified a_vecCenter
+	inline void			RotateYZBy(float a_fDegrees, const Vector3& a_vecCenter = Vector3(0.f, 0.f, 0.f));
+	// Rotates the vector by a specified number of a_fDegrees around the Y axis and the specified a_vecCenter
+	inline void			RotateXZBy(float a_fDegrees, const Vector3& a_vecCenter = Vector3(0.f, 0.f, 0.f));
+	// Rotates the vector by a specified number of a_fDegrees around the Z axis and the specified a_vecCenter
+	inline void			RotateXYBy(float a_fDegrees, const Vector3& a_vecCenter = Vector3(0.f, 0.f, 0.f));
 
 	inline static const Vector3&	Zero();
 	inline static Vector3		Reflect(const Vector3& v, const Vector3& vNormal);

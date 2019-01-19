@@ -42,18 +42,18 @@ Vector3 Color(const Ray& ray, Hitable* world, int depth)
 
 Hitable*  RandomScene()
 {
-	Hitable** list = new Hitable*[500];
-	ConstantTexture* pBlueLightTex = new ConstantTexture(Vector3(0.f, 1.2f, 4.f));
-	ConstantTexture* pWhiteLightTex = new ConstantTexture(Vector3(4.f));
-	ConstantTexture* pOddTex = new ConstantTexture(Vector3(random.Gen() * 0.5f, random.Gen()* 0.5f, random.Gen()* 0.5f));
-	ConstantTexture* pEvenTex = new ConstantTexture(Vector3(random.Gen()* 0.5f + 0.5f, random.Gen()* 0.5f + 0.5f, random.Gen()* 0.5f + 0.5f));
-	CheckerTexture* pTex = new CheckerTexture(pOddTex, pEvenTex);
+	Hitable** list = new Hitable*[20];
 	int i = 0;
-	list[i++] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f), pTex));
-	list[i++] = new Sphere(Vector3(0.f, 1.f, 0.f), 1.f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
-	list[i++] = new Sphere(Vector3(0.f, 3.5f, 0.f), 1.f, new DiffuseLight(pWhiteLightTex));
-	list[i++] = new Quad(Vector3(2.f, 1.f, 0.f), Vector3(-1.f, 0.f, 0.f), Vector3( 0.f, 1.f, 0.f ), 2.f, 2.f, new DiffuseLight(pWhiteLightTex));
-	//list[i++] = new Sphere(Vector3(2.f, 1.f, 0.f), 0.3f, new Lambertian(Vector3(0.5f, 0.5f, 0.5f), pTex));
+	Material* red = new Lambertian(Vector3(0.65f, 0.05f, 0.05f));
+	Material* green = new Lambertian(Vector3(0.12f, 0.45f, 0.15f));
+	Material* white = new Lambertian(Vector3(0.73f));
+	Material* light = new DiffuseLight(new ConstantTexture(Vector3(15.f)));
+	list[i++] = new Quad(Vector3( -50.f, 0.f, 0.f), Vector3(1.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f), 100.f, 100.f,green);
+	list[i++] = new Quad(Vector3( 50.f, 0.f, 0.f), Vector3( -1.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f), 100.f, 100.f, red);
+	list[i++] = new Quad(Vector3(0.f, -50.f, 0.f), Vector3(0.f, 1.f, 0.f), Vector3(0.f, 0.f, -1.f), 100.f, 100.f, white);
+	list[i++] = new Quad(Vector3(0.f, 50.f, 0.f), Vector3(0.f, -1.f, 0.f), Vector3(0.f, 0.f, 1.f), 100.f, 100.f, white);
+	list[i++] = new Quad(Vector3(0.f, 49.99f, 0.f), Vector3(0.f, -1.f, 0.f), Vector3(0.f, 0.f, 1.f), 20.f, 20.f, light);
+	list[i++] = new Quad(Vector3(0.f, 0.f, 50.f), Vector3(0.f, 0.f, -1.f), Vector3(0.f, 1.f, 0.f), 100.f, 100.f, white);
 	return new HitableList(list, i);
 }
 
@@ -65,14 +65,14 @@ int main()
 	int ny = 200;
 	Vector3* colBuffer = new Vector3[nx*ny];
 	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
-	int ns = 400;
+	int ns = 1000;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
-	Vector3 vEye( -0.2f, 3.f, -2.f);
-	Vector3 vLookAt(0.f, 1.f, 0.0f);
+	Vector3 vEye( -0.0f, 0.f, -200.f);
+	Vector3 vLookAt(0.f, 0.f, 0.0f);
 	float fDistToFocus = (vLookAt - vEye).Length();
 	float fAperture = 0.1f;
 	fAperture = 0.f;
-	Camera cam(vEye, vLookAt, Vector3(0.f, 1.f, 0.f), 90, float(nx) / float(ny), fAperture, fDistToFocus);
+	Camera cam(vEye, vLookAt, Vector3(0.f, 1.f, 0.f), 40, float(nx) / float(ny), fAperture, fDistToFocus);
 	Hitable* world = RandomScene();
 	for (int j = ny - 1; j >= 0; --j)
 	{

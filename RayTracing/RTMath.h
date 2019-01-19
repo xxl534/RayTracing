@@ -7,6 +7,7 @@
 extern const float	GSinTable[MATH_NUM_ANGLES];
 
 static const float	kPI = 3.1415926535897932f;
+static const float	kPIDivide180 = 0.0174532625199433f;
 
 inline int
 MathTrunc(float a_f)

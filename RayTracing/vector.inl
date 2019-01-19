@@ -275,6 +275,46 @@ Vector3::Set(float a_fx, float a_fy, float a_fz)
 	z = a_fz;
 }
 
+void
+Vector3::RotateYZBy(float a_fDegrees, const Vector3& a_vecCenter /*= Vector3(0.f, 0.f, 0.f)*/)
+{
+	a_fDegrees *= kPIDivide180;
+	float cs = MathCosFloat(a_fDegrees);
+	float sn = MathSinFloat(a_fDegrees);
+	z -= a_vecCenter.z;
+	y -= a_vecCenter.y;
+	Set(x, y*cs - z*sn, y*sn + z*cs);
+	z += a_vecCenter.z;
+	y += a_vecCenter.y;
+}
+
+//----------------------------------------
+void
+Vector3::RotateXZBy(float a_fDegrees, const Vector3& a_vecCenter /*= Vector3(0.f, 0.f, 0.f)*/)
+{
+	a_fDegrees *= kPIDivide180;
+	float cs = MathCosFloat(a_fDegrees);
+	float sn = MathSinFloat(a_fDegrees);
+	x -= a_vecCenter.x;
+	z -= a_vecCenter.z;
+	Set(x*cs - z*sn, y, x*sn + z*cs);
+	x += a_vecCenter.x;
+	z += a_vecCenter.z;
+}
+
+//----------------------------------------
+void
+Vector3::RotateXYBy(float a_fDegrees, const Vector3& a_vecCenter /*= Vector3(0.f, 0.f, 0.f)*/)
+{
+	a_fDegrees *= kPIDivide180;
+	float cs = MathCosFloat(a_fDegrees);
+	float sn = MathSinFloat(a_fDegrees);
+	x -= a_vecCenter.x;
+	y -= a_vecCenter.y;
+	Set(x*cs - y*sn, x*sn + y*cs, z);
+	x += a_vecCenter.x;
+	y += a_vecCenter.y;
+}
 //----------------------------------------
 const Vector3&
 Vector3::Zero()

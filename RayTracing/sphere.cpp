@@ -37,6 +37,8 @@ bool Sphere::Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec)
 		if (fCoef > fMinCoef && fCoef < fMaxCoef)
 		{
 			rec.coef = fCoef;
+			rec.u = 0.f;
+			rec.v = 0.f;
 			rec.point = ray.PointAt(rec.coef);
 			rec.normal = (rec.point - vCenter)/ Radius();
 			rec.material_ptr = m_pMaterial;

@@ -20,7 +20,7 @@ Vector3 Color(const Ray& ray, Hitable* world, int depth)
 	{
 		Ray scattered;
 		Vector3 vAttenuation;
-		if (depth < 50 && rec.material_ptr->scatter(ray, rec, vAttenuation, scattered))
+		if (depth < 50 && rec.material_ptr->Scatter(ray, rec, vAttenuation, scattered))
 		{
 			return vAttenuation * Color(scattered, world, depth + 1);
 		}

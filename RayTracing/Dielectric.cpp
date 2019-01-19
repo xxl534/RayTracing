@@ -13,7 +13,7 @@ inline float SchlickReflectivity(float cosine, float refractiveIndex)
 	r0 = r0 * r0;
 	return r0 + (1 - r0)* Pow5(1 - cosine);
 }
-bool Dielectric::scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const
+bool Dielectric::Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const
 {
 	Vector3 vOutwardNormal;
 	float fRefractiveRadio;

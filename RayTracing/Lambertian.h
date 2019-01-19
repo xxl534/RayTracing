@@ -9,7 +9,7 @@ public:
 	Lambertian(const Vector3& albedo);
 	~Lambertian();
 
-	virtual bool scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const override;
+	virtual bool Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const override;
 
 private:
 	Vector3 m_vAlbedo;

@@ -11,105 +11,68 @@
 #include "Metal.h"
 #include "Dielectric.h"
 #include "Texture.h"
-
+#include "Quad.h"
+#include "Light.h"
 extern RandomFloat random = RandomFloat();
+extern float gShutterDuration = 0.1f;
+extern float gElapsed = 0.f;
+
 Vector3 Color(const Ray& ray, Hitable* world, int depth)
 {
 	HitRecord rec;
 	if (world->Hit(ray, 0.001f, FLT_MAX, rec))
 	{
 		Ray scattered;
+		Vector3 vEmitted = rec.material_ptr->Emitted(rec.u, rec.v, rec.point);
 		Vector3 vAttenuation;
-		if (depth < 50 && rec.material_ptr->scatter(ray, rec, vAttenuation, scattered))
+		if (depth < 50 && rec.material_ptr->Scatter(ray, rec, vAttenuation, scattered))
 		{
-			return vAttenuation * Color(scattered, world, depth + 1);
+			return vEmitted +  vAttenuation * Color(scattered, world, depth + 1);
 		}
 		else
 		{
-			return Vector3::Zero();
+			return vEmitted;
 		}
 	}
-	Vector3 vDirNormal = ray.NormalizedDirection();
+	return Vector3(0.f);
+	/*Vector3 vDirNormal = ray.NormalizedDirection();
 	float t = 0.5f * (vDirNormal.y + 1.f);
-	return Vector3(1.f) * (1.f - t) + Vector3(0.5f, 0.7f, 1.f) * t;
+	return Vector3(1.f) * (1.f - t) + Vector3(0.5f, 0.7f, 1.f) * t;*/
 }
 
 Hitable*  RandomScene()
 {
-	
 	Hitable** list = new Hitable*[500];
+	ConstantTexture* pBlueLightTex = new ConstantTexture(Vector3(0.f, 1.2f, 4.f));
+	ConstantTexture* pWhiteLightTex = new ConstantTexture(Vector3(4.f));
 	ConstantTexture* pOddTex = new ConstantTexture(Vector3(random.Gen() * 0.5f, random.Gen()* 0.5f, random.Gen()* 0.5f));
 	ConstantTexture* pEvenTex = new ConstantTexture(Vector3(random.Gen()* 0.5f + 0.5f, random.Gen()* 0.5f + 0.5f, random.Gen()* 0.5f + 0.5f));
 	CheckerTexture* pTex = new CheckerTexture(pOddTex, pEvenTex);
-	list[0] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f), pTex));
-	int i = 1;
-	for (int a = -2; a <= 2; ++a)
-	{
-		for (int b = -2; b <= 2; ++b)
-		{
-			float moveRandom = random.Gen();
-			Vector3 vVelocity(0.f);
-			Vector3 vAccele(0.f);
-			if (moveRandom < 0.5 )
-			{
-				vVelocity.y = (random.Gen() * 2.f - 1.f) * 3.f;
-				vAccele.y = -9.8f;
-			}
-			Vector3 center(a * 2.f + 0.8f * random.Gen(), 0.2f + 3.f * random.Gen(), b * 2.f + 0.8f * random.Gen());
-			float matRandon = random.Gen();
-			Material* pMat;
-			if (matRandon < 0.7f)
-			{
-				pMat = new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen()));
-			}
-			else if (matRandon < 0.9f)
-			{
-				pMat = new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen())));
-			}
-			else
-			{
-				pMat = new Dielectric(1.f + random.Gen() * 0.5f, Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen())));
-			}
-			list[i++] = new Sphere(center, vVelocity, vAccele, 0.2f, pMat);
-		}
-	}
-	list[i++] = new Sphere(Vector3(0.f, 1.f, 0.f), 1.f, new Dielectric(1.5f, Vector3(1.f)));
-	list[i++] = new Sphere(Vector3(-2.f, 1.f, 0.f), 1.f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
-	list[i++] = new Sphere(Vector3(2.f, 1.f, 0.f), 1.f, new Metal(Vector3(0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()), 0.5f* (1.f + random.Gen()))));
+	int i = 0;
+	list[i++] = new Sphere(Vector3(0, -1000, 0), 1000, new Lambertian(Vector3(0.5f, 0.5f, 0.5f), pTex));
+	list[i++] = new Sphere(Vector3(0.f, 1.f, 0.f), 1.f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
+	list[i++] = new Sphere(Vector3(0.f, 3.5f, 0.f), 1.f, new DiffuseLight(pWhiteLightTex));
+	list[i++] = new Quad(Vector3(2.f, 1.f, 0.f), Vector3(-1.f, 0.f, 0.f), Vector3( 0.f, 1.f, 0.f ), 2.f, 2.f, new DiffuseLight(pWhiteLightTex));
+	//list[i++] = new Sphere(Vector3(2.f, 1.f, 0.f), 0.3f, new Lambertian(Vector3(0.5f, 0.5f, 0.5f), pTex));
 	return new HitableList(list, i);
 }
-
-extern float gShutterDuration = 0.1f;
-extern float gElapsed = 0.f;
 
 int main()
 {
 	LONG64 llCurrTick;
 	QueryPerformanceCounter((LARGE_INTEGER*)&llCurrTick);
-	int nx = 500;
+	int nx = 200;
 	int ny = 200;
 	Vector3* colBuffer = new Vector3[nx*ny];
 	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
 	int ns = 400;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
-	Vector3 vEye( 3.0f, 2.5f, -3.0f);
+	Vector3 vEye( -0.2f, 3.f, -2.f);
 	Vector3 vLookAt(0.f, 1.f, 0.0f);
 	float fDistToFocus = (vLookAt - vEye).Length();
 	float fAperture = 0.1f;
 	fAperture = 0.f;
 	Camera cam(vEye, vLookAt, Vector3(0.f, 1.f, 0.f), 90, float(nx) / float(ny), fAperture, fDistToFocus);
-	/*Hitable* list[5];
-	list[0] = new Sphere(Vector3(0.f, 0.f, 1.f), 0.5f, new Lambertian(Vector3(0.8f, 0.3f, 0.3f)));
-	list[1] = new Sphere(Vector3(0.f, -100.5f, 1.f), 100.f, new Lambertian(Vector3(0.8f, 0.8f, 0.f)));
-	list[2] = new Sphere(Vector3(1.f, 0.f, 1.f), 0.5f, new Metal(Vector3(0.8f, 0.6f, 0.2f)));
-	list[3] = new Sphere(Vector3(-1.f, 0.f, 1.f), 0.5f, new Dielectric( 1.51f, Vector3(1.f, 1.f, 1.f)));
-	list[4] = new Sphere(Vector3(-1.f, 0.f, 1.f), -0.49f, new Dielectric(1.51f, Vector3(1.f, 1.f, 1.f)));
-	Hitable* world = new HitableList(list,4);*/
-	/*Hitable* list[3];
-	list[0] = new Sphere(Vector3(0.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
-	list[1] = new Sphere(Vector3(1.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
-	list[2] = new Sphere(Vector3(-1.f, 0.f, 0.f), 0.5f, new Lambertian(Vector3(random.Gen(), random.Gen(), random.Gen())));
-	Hitable* world = new HitableList(list, 3);*/
 	Hitable* world = RandomScene();
 	for (int j = ny - 1; j >= 0; --j)
 	{
@@ -129,7 +92,7 @@ int main()
 			int ir = int(255.99* vCol.x);
 			int ig = int(255.99* vCol.y);
 			int ib = int(255.99* vCol.z);
-			std::cout << ir << " " << ig << " " << ib << " ";
+			std::cout << MathClamp(ir,0,255) << " " << MathClamp(ig, 0, 255) << " " << MathClamp(ib, 0, 255) << " ";
 		}
 		std::cout << "\n";
 	}

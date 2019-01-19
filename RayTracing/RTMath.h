@@ -31,6 +31,11 @@ inline T Max(const T a, const T b)
 	return a >= b ? a : b;
 }
 
+template<typename T>
+inline T MathClamp(const T a_value, const T a_min, const T a_max)
+{
+	return a_value < a_min ? a_min : (a_value <= a_max ? a_value : a_max);
+}
 inline float MathSinTab(int rotator)
 {
 	return GSinTable[((rotator >> MATH_ANGLE_SHIFT)&(MATH_NUM_ANGLES - 1))];

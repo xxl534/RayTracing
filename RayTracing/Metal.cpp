@@ -11,7 +11,7 @@ Metal::~Metal()
 }
 
 bool 
-Metal::scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const
+Metal::Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const
 {
 	Vector3 vRefl = Vector3::Reflect(rayIn.Direction(), record.normal);
 	rayScattered = Ray(record.point, vRefl);

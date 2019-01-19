@@ -7,6 +7,7 @@ struct HitRecord
 	float coef;
 	Vector3 point;
 	Vector3 normal;
+	float u, v;
 	Material* material_ptr;
 	HitRecord() :material_ptr(NULL) {}
 };

@@ -352,3 +352,9 @@ Vector3::MergeMax(const Vector3& lhs, const Vector3& rhs)
 {
 	return Vector3(Max(lhs.x, rhs.x), Max(lhs.y, rhs.y), Max(lhs.z, rhs.z));
 }
+
+Vector3 Vector3::Clamp(const Vector3& v, const Vector3& vMin, const Vector3 vMax)
+{
+	return Vector3(MathClamp(v.x, vMin.x, vMax.x), MathClamp(v.y, vMin.y, vMax.y), MathClamp(v.y, vMin.y, vMax.y));
+}
+

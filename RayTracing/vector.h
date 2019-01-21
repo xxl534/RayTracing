@@ -78,6 +78,7 @@ struct Vector3
 	inline static bool			Refract(const Vector3& v, const Vector3& vNormal, float fRefractiveRadio, Vector3& out_vRefracted);
 	inline static Vector3		MergeMin(const Vector3& lhs, const Vector3& rhs);
 	inline static Vector3		MergeMax(const Vector3& lhs, const Vector3& rhs);
+	inline static Vector3		Clamp(const Vector3& v, const Vector3& vMin, const Vector3 vMax);
 private:
 	static Vector3			ms_vZero;
 };

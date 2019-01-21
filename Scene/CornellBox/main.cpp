@@ -24,6 +24,10 @@ Vector3 Color(const Ray& ray, Hitable* world, int depth)
 	{
 		Ray scattered;
 		Vector3 vEmitted = rec.material_ptr->Emitted(rec.u, rec.v, rec.point);
+		if (depth == 0)
+		{
+			vEmitted = Vector3::Clamp(vEmitted, Vector3(0.f), Vector3(1.f));
+		}
 		Vector3 vAttenuation;
 		if (depth < 50 && rec.material_ptr->Scatter(ray, rec, vAttenuation, scattered))
 		{
@@ -65,7 +69,7 @@ int main()
 	int ny = 200;
 	Vector3* colBuffer = new Vector3[nx*ny];
 	memset(colBuffer, 0, nx * ny * sizeof(Vector3));
-	int ns = 1000;
+	int ns = 4000;
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 	Vector3 vEye( -0.0f, 0.f, -200.f);
 	Vector3 vLookAt(0.f, 0.f, 0.0f);

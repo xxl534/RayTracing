@@ -1,6 +1,5 @@
 #include "BVH.h"
 #include <assert.h>
-#include "Hitable.h"
 
 Hitable* _GeneNode(Hitable** arrLeaf, int count,const Aabb& aabb)
 {

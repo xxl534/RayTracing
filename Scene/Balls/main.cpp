@@ -1,15 +1,15 @@
 #include <iostream>
 #include <windows.h>
 #include "ray.h"
-#include "sphere.h"
+#include "hitable/sphere.h"
 #include <float.h>
-#include "HitableList.h"
+#include "hitable/HitableList.h"
 #include "Camera.h"
-#include "Material.h"
+#include "material/Material.h"
 #include "Random.h"
-#include "Lambertian.h"
-#include "Metal.h"
-#include "Dielectric.h"
+#include "material/Lambertian.h"
+#include "material/Metal.h"
+#include "material/Dielectric.h"
 #include "Texture.h"
 
 extern RandomFloat random = RandomFloat();

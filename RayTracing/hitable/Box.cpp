@@ -45,4 +45,5 @@ bool Box::Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec) co
 		}
 	}
 	return false;
+	//return m_arrPlane[4]->Hit(ray, fMinCoef, fMaxCoef, rec);
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Aabb.h"
-#include "Hitable.h"
+#include "hitable/Hitable.h"
 
 struct BvhNodeBase;
 class Hitable;

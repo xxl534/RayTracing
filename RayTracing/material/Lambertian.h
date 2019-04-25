@@ -1,6 +1,6 @@
 #pragma once
 #include "Material.h"
-#include "vector.h"
+#include "../vector.h"
 class Texture;
 class Lambertian : public Material
 {

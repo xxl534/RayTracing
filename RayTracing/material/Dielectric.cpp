@@ -1,6 +1,6 @@
 #include "Dielectric.h"
-#include "RTMath.h"
-#include "Random.h"
+#include "../RTMath.h"
+#include "../Random.h"
 extern RandomFloat random;
 inline float Pow5(float f)
 {

@@ -1,6 +1,6 @@
 #include "Lambertian.h"
-#include "Random.h"
-#include "Texture.h"
+#include "../Random.h"
+#include "../Texture.h"
 extern RandomFloat random;
 Lambertian::Lambertian(const Vector3 & albedo, Texture * pTexture)
 	:m_vAlbedo(albedo)

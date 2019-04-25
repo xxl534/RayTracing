@@ -1,5 +1,5 @@
 #include "Sphere.h"
-#include "RTMath.h"
+#include "../RTMath.h"
 
 extern float gElapsed;
 extern float gShutterDuration;

@@ -7,12 +7,13 @@ struct Aabb
 {
 	Aabb();
 	Aabb(const Vector3& min, const Vector3& max);
-	bool FitIn(const Aabb& a);
-	static Aabb Merge(const Aabb& a, const Aabb& b);
 	const Vector3& Max() const { return m_vMax; }
 	const Vector3& Min() const { return m_vMin; }
 	float Volume() const;
+	bool FitIn(const Aabb& a);
 	bool Hit(const Ray& ray, float tMin, float tMax, float& outMin) const;
+	void MergePoint(const Vector3& point);
+	static Aabb Merge(const Aabb& a, const Aabb& b);
 private:
 	Vector3 m_vMin;
 	Vector3 m_vMax;
@@ -81,4 +82,11 @@ inline bool Aabb::Hit(const Ray& ray, float tMin, float tMax, float& outMin) con
 	}
 	outMin = tMin;
 	return true;
+}
+
+inline void 
+Aabb::MergePoint(const Vector3& point)
+{
+	m_vMin = Vector3::MergeMin(m_vMin, point);
+	m_vMax = Vector3::MergeMax(m_vMax, point);
 }

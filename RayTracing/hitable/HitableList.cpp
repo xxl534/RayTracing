@@ -1,5 +1,5 @@
 #include "HitableList.h"
-#include "BVH.h"
+#include "../BVH.h"
 HitableList::HitableList(Hitable** arrHitable, int nSize) :m_arrHitable(arrHitable), m_nSize(nSize),m_bvh(NULL)
 {
 	m_bvh = new BVH(arrHitable, nSize);

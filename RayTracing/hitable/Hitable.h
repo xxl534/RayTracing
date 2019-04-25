@@ -1,6 +1,6 @@
 #pragma once
-#include "ray.h"
-#include "Aabb.h"
+#include "../ray.h"
+#include "../Aabb.h"
 class Material;
 struct HitRecord
 {

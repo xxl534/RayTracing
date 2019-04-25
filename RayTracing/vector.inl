@@ -273,6 +273,7 @@ Vector3::Set(float a_fx, float a_fy, float a_fz)
 	x = a_fx;
 	y = a_fy;
 	z = a_fz;
+	return *this;
 }
 
 void

@@ -6,7 +6,7 @@ class ConstantMedium : public Hitable
 {
 public:
 	ConstantMedium(Hitable* pObj, float density, Texture* tex);
-	virtual bool Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec);
+	virtual bool Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec) const;
 	virtual Aabb GetAabb();
 private:
 	Hitable* m_pObject;

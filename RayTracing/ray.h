@@ -13,6 +13,7 @@ public:
 private:
 	Vector3 m_vOrigin;
 	Vector3 m_vDir;
+	Vector3 m_vNormalizedDir;
 	bool m_bDirNormalized;
 };
 
@@ -22,8 +23,8 @@ Ray::NormalizedDirection() const
 	Ray* p = const_cast<Ray*>(this);
 	if (p->m_bDirNormalized == false) 
 	{ 
-		p->m_vDir.Normalize(); 
+		p->m_vNormalizedDir = p->m_vDir.Normalize();
 		p->m_bDirNormalized = true; 
 	}
-	return m_vDir;
+	return m_vNormalizedDir;
 }

@@ -20,3 +20,4 @@ ADD_SUBDIRECTORY(RayTracing)
 
 ADD_SUBDIRECTORY(Scene/Balls)
 ADD_SUBDIRECTORY(Scene/CornellBox)
+ADD_SUBDIRECTORY(Scene/MCIntegration)

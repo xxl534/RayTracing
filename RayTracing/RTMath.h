@@ -20,6 +20,18 @@ inline bool MathNearlyZero(float f, float tolerance = MATH_KINDA_SMALL_NUMBER)
 	return	f > -tolerance&&f < tolerance;
 }
 
+inline bool MathNearlyZero(double d, double tolerance = MATH_KINDA_SMALL_NUMBER)
+{
+	return d > -tolerance && d < tolerance;
+}
+
+
+template<typename T>
+inline T Abs(const T a)
+{
+	return a >= 0 ? a : -a;
+}
+
 template<typename T>
 inline T Min(const T a, const T b)
 {

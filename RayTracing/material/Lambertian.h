@@ -10,8 +10,8 @@ public:
 	~Lambertian();
 
 	virtual bool Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered) const override;
-	virtual bool Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered, float& pdf) const override;
 	virtual float ScatterPdf(const Ray& rayIn, const HitRecord& record, const Ray& scattered) const override;
+	virtual bool Scatter(const Ray& rayIn, const HitRecord& hitRecord, ScatterRecord& scatterRec) const override;
 private:
 	Vector3 m_vAlbedo;
 	Texture* m_pTexture;

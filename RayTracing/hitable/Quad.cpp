@@ -1,4 +1,7 @@
 #include "Quad.h"
+#include <float.h>
+#include "../Random.h"
+extern RandomFloat random;
 
 Quad::Quad(const Vector3 & pos, const Vector3 & normal, const Vector3 & up, float width, float height, Material* pMat)
 	:m_position(pos)
@@ -55,5 +58,25 @@ bool Quad::Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec) c
 Aabb Quad::GetAabb()
 {
 	return m_aabb;
+}
+
+float Quad::PdfValue(const Vector3& origin, const Vector3 direction) const
+{
+	HitRecord rec;
+	Ray ray(origin, direction);
+	if (Hit(ray, 0.001f, FLT_MAX, rec))
+	{
+		float area = m_height * m_width;
+		float distanceSqr = rec.coef * rec.coef;
+		float cosine = Abs(rec.normal.dot(ray.Direction()));
+		return distanceSqr / (cosine * area);
+	}
+	return 0.f;
+}
+
+Vector3 Quad::Random(const Vector3& origin) const
+{
+	Vector3 randomPoint = m_position + m_up * random.Gen(-0.5f, 0.5f) + m_right * random.Gen(-0.5f, 0.5f);
+	return randomPoint - origin;
 }
 

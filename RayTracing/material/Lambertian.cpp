@@ -2,6 +2,8 @@
 #include "../Random.h"
 #include "../Texture.h"
 #include "../Onb.h"
+#include "../pdf/PdfCosine.h"
+
 extern RandomFloat random;
 Lambertian::Lambertian(const Vector3 & albedo, Texture * pTexture)
 	:m_vAlbedo(albedo)
@@ -27,13 +29,11 @@ Lambertian::Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenua
 	return true;
 }
 
-bool Lambertian::Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAttenuation, Ray& rayScattered, float& pdf) const
+bool Lambertian::Scatter(const Ray& rayIn, const HitRecord& hitRecord, ScatterRecord& scatterRec) const
 {
-	Onb uvw(record.normal);
-	Vector3 vDir = uvw.Local( random.CosineDirection());
-	rayScattered = Ray(record.point, vDir);
-	vAttenuation = m_pTexture ? m_vAlbedo * m_pTexture->Sample(0, 0, record.point) : m_vAlbedo;
-	pdf = record.normal.dot(rayScattered.Direction()) / kPI;
+	scatterRec.isSpecular = false;
+	scatterRec.attenuation = m_pTexture ? m_vAlbedo * m_pTexture->Sample(0, 0, hitRecord.point) : m_vAlbedo;
+	scatterRec.pdfPointer = new PdfCosine(hitRecord.normal);
 	return true;
 }
 

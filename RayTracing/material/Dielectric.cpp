@@ -32,17 +32,17 @@ bool Dielectric::Scatter(const Ray& rayIn, const HitRecord& record, Vector3& vAt
 
 	Vector3 vRefracted;
 	float fReflectProb;
-	if (Vector3::Refract(rayIn.NormalizedDirection(), vOutwardNormal, fRefractiveRadio, vRefracted))
+	if (Vector3::Refract(rayIn.Direction(), vOutwardNormal, fRefractiveRadio, vRefracted))
 	{
 		float cosine;
 		if (bIntoAir)
 		{
 			//cosine = sqrtf(1 - Square(-(vOutwardNormal.dot(rayIn.NormalizedDirection())) * m_fRefractiveIndex));
-			cosine = -(vOutwardNormal.dot(rayIn.NormalizedDirection())) * m_fRefractiveIndex;
+			cosine = -(vOutwardNormal.dot(rayIn.Direction())) * m_fRefractiveIndex;
 		}
 		else
 		{
-			cosine = -(vOutwardNormal.dot(rayIn.NormalizedDirection()));
+			cosine = -(vOutwardNormal.dot(rayIn.Direction()));
 		}
 		fReflectProb = SchlickReflectivity(cosine, m_fRefractiveIndex);
 	}

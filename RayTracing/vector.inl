@@ -212,7 +212,7 @@ Vector3&
 Vector3::Normalize()
 {
 	double dLenSqr = (double)(x * x) + (y * y) + (z * z);
-	if (dLenSqr > 0.0)
+	if (dLenSqr > 0.0 && !MathNearlyZero(dLenSqr - 1.0))
 	{
 		float fLenRecp = (float)(1.f / sqrt(dLenSqr));
 		x *= fLenRecp;

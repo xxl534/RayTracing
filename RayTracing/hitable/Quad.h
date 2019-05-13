@@ -8,6 +8,9 @@ public:
 	virtual bool Hit(const Ray& ray, float fMinCoef, float fMaxCoef, HitRecord& rec) const override;
 
 	virtual Aabb GetAabb() override;
+
+	virtual float PdfValue(const Vector3& origin, const Vector3 direction) const override;
+	virtual Vector3 Random(const Vector3& origin) const override;
 private:
 	Aabb m_aabb;
 	Vector3 m_position;

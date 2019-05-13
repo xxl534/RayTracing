@@ -9,6 +9,7 @@ public:
 		//m_dice = std::bind(m_distribution, m_generator);
 	}
 	float Gen() { return m_dice(); }
+	float Gen(float min, float max) { return Gen() * (max - min) + min; }
 	Vector3 InSphere();
 	Vector3 CosineDirection();
 private:
@@ -24,7 +25,7 @@ RandomFloat::InSphere()
 	{
 		p = Vector3(Gen(), Gen(), Gen()) *2.f - Vector3(1.f);
 	} while (p.LengthSqr() >= 1.f);
-	return p;
+	return p.GetNormalize();
 }
 
 inline Vector3
